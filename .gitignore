@@ -9,6 +9,7 @@ Other/
 .streamlit/secrets.toml
 law_pdf_to_json_by_claude.py
 law_pdf_to_json.py
+delete_empty_db.py
 
 # The vector database SHOULD be committed (not ignored) — your cloud
 # deployment needs this actual data to answer questions. Do not add
