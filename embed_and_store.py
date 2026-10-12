@@ -19,6 +19,7 @@ added to the same local database (in a folder called chroma_db/), so your
 bot can search across all Acts you've added so far.
 """
 
+from collections import Counter
 import sys
 import json
 import re
@@ -80,6 +81,12 @@ def main():
     print(f"Connecting to local database at {CHROMA_DB_PATH}/ ...")
     client = chromadb.PersistentClient(path=CHROMA_DB_PATH)
     collection = client.get_or_create_collection(COLLECTION_NAME)
+
+    from collections import Counter
+    counts = Counter(ids)
+    bad = [k for k, v in counts.items() if v > 1]
+    if bad:
+        raise SystemExit(f"Duplicate IDs, fix these in your JSON first: {bad[:10]}")
 
     # upsert = add new, or update if the same ID already exists — safe to
     # re-run this script if you improve your JSON later.

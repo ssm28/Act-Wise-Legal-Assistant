@@ -7,6 +7,8 @@ __pycache__/
 Note.txt
 Other/
 .streamlit/secrets.toml
+law_pdf_to_json_by_claude.py
+law_pdf_to_json.py
 
 # The vector database SHOULD be committed (not ignored) — your cloud
 # deployment needs this actual data to answer questions. Do not add
