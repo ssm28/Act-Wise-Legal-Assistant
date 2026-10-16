@@ -4,6 +4,8 @@
 
 This project was developed as a Minimum Viable Product (MVP) to bridge the gap between complex legal texts and accessible information, focusing specifically on modern Indian law.
 
+Access the Cloud webapp from here: https://actwise.streamlit.app/
+
 ## 🚀 Key Features
 
 * **Contextual Legal Answers:** Leverages RAG architecture to fetch highly relevant legal clauses before generating responses, ensuring high accuracy.
