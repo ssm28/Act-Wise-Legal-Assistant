@@ -200,8 +200,9 @@ st.markdown(f"""
 <div class="masthead">
     {logo_html}
     <div>
-        <h1>Nyaya Sahayak</h1>
-        <p>Ask in plain language. Answers are grounded in Indian statutes, with citations. This is legal information, not legal advice.</p>
+        <h1>Act Wise</h1>
+        <p>Ask in plain language. Answers are grounded in Indian statutes, with citations.</p>
+        <p><strong>This is legal information, not legal advice.</strong></p>
     </div>
 </div>
 """, unsafe_allow_html=True)
