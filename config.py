@@ -36,6 +36,12 @@ LLM_MODEL_NAME = "gemini-3.6-flash"
 # this line) to go back to the model's own default reasoning behavior.
 LLM_REASONING_EFFORT = "low"
 
+# this is the maximum distance between a question and a section for the section to be considered relevant. It is set by running calibrate_threshold.py, which compares a list of questions that should be in-scope with a list that should be out-of-scope. The script suggests a threshold that keeps all in-scope questions while minimizing the number of out-of-scope ones that get through.
+# If you change the Acts in your database, you should re-run calibrate_threshold.py to get a new threshold.
+# The default value is 1.51, which was determined by running calibrate_threshold.py on the sample Acts included in this repo.
+# If you want to be more strict, you can lower this value, but you may miss some relevant sections. If you want to be more lenient, you can raise this value, but you may get more irrelevant sections.
+RELEVANCE_MAX_DISTANCE = 1.51
+
 # --- Settings used when LLM_PROVIDER = "anthropic" ---
 ANTHROPIC_API_KEY = "placeholder-set-your-real-key-in-local_secrets.py"
 ANTHROPIC_MODEL_NAME = "claude-haiku-4-5-20251001"

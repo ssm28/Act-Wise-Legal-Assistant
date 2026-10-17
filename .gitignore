@@ -4,13 +4,14 @@ local_secrets.py
 __pycache__/
 *.pyc
 *.pdf
-Note.txt
 Other/
 .streamlit/secrets.toml
 law_pdf_to_json_by_claude.py
 law_pdf_to_json.py
 delete_empty_db.py
-
+*.db
+old_codes/
+legacy_law_map.json
 # The vector database SHOULD be committed (not ignored) — your cloud
 # deployment needs this actual data to answer questions. Do not add
 # chroma_db/ to this file.

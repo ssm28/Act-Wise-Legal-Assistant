@@ -1,0 +1,231 @@
+[
+  {
+    "question": "If a company is engaging in unfair trade practices that harm consumers as a class, which central authority has the power to regulate this under the Act?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "10"}]
+  },
+  {
+    "question": "Who makes up the Central Consumer Protection Authority, and where is its headquarters mandated to be located?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "10"}]
+  },
+  {
+    "question": "Which regulatory body is established by the Central Government to handle false or misleading advertisements and unfair trade practices?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "10"}]
+  },
+  {
+    "question": "What is the maximum time limit for the District Commission to decide a consumer complaint, and does it change if the product needs to be sent to a laboratory for testing?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "38"}]
+  },
+  {
+    "question": "I filed a case because my new smart TV keeps short-circuiting, but the company claims I broke it. If the court decides an independent lab needs to test the TV to find the defect, who has to pay the lab fees upfront?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "38"}]
+  },
+  {
+    "question": "Does the District Commission have the legal power to summon a witness or force a company to produce internal documents during a proceeding?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "38"}]
+  },
+  {
+    "question": "What is the minimum monetary value of goods or services involved for a consumer complaint to be directly filed with the National Commission?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "58"}]
+  },
+  {
+    "question": "A group of us are suing a real estate developer for a delayed housing project, and the total amount we paid them is around 12 crore rupees. Do we have to start at the local district court, or can we take this straight to the national level?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "58"}]
+  },
+  {
+    "question": "What happens if a bench of the National Commission is equally divided in their opinion on a case, and what is the time limit for resolving this tie?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "58"}]
+  },
+  {
+    "question": "If a consumer wants to know the exact fee and the acceptable electronic format for filing a complaint, who decides and prescribes these specific details under the law?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "101"}]
+  },
+  {
+    "question": "I noticed that online shopping sites have to follow certain strict rules nowadays to prevent unfair trade practices. Under the law, who actually has the power to create and enforce these e-commerce rules?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "101"}]
+  },
+  {
+    "question": "I just bought a packet of turmeric powder from a local shop and realized it was mixed with some harmful synthetic color. Thankfully, I noticed it before cooking, so nobody got sick. Since no one was actually hurt, can the shopkeeper still go to jail, or is it just a warning?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "90"}]
+  },
+  {
+    "question": "My uncle passed away after consuming counterfeit, adulterated cooking oil. The police just arrested the owner of the manufacturing company. Is it possible for the owner to just pay a fine and get out on bail quickly while the trial is going on?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "90"}]
+  },
+  {
+    "question": "The courier guy tried to deliver the consumer court notice to the shop owner who sold me the fake watch, but the owner flat-out refused to accept the envelope. Does this mean my case is stalled because he wasn't officially 'served'?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "65"}]
+  },
+  {
+    "question": "I need to send a legal notice to a massive online shopping app for a refund. Can the consumer court just send the notice electronically, and who at these big tech companies is actually supposed to receive it?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "65"}]
+  },
+  {
+    "question": "A famous celebrity endorsed a weight loss supplement on Instagram that turned out to be completely fake and misleading. Can the celebrity be banned from doing any brand endorsements, and how much can they be fined?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "21"}]
+  },
+  {
+    "question": "Can a newspaper or magazine be penalized for printing a scam advertisement if running ads is just part of their normal business operations?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "21"}]
+  },
+  {
+    "question": "What factors does the Central Authority consider when deciding how large of a fine to slap on a company for running a nationwide misleading ad campaign?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "21"}]
+  },
+  {
+    "question": "The consumer court ordered a laptop company to refund my money two months ago, but they are completely ignoring the final order. Can the company owners actually go to jail for ignoring the court, or what is the maximum fine they can get hit with?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "72"}]
+  },
+  {
+    "question": "The builder refused to follow the State Commission's compensation order, and now my lawyer says we can seek criminal punishment. Do I have to go file a brand new case in a regular criminal court to get him punished, or can the consumer court handle criminal trials themselves?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "72"}]
+  },
+  {
+    "question": "The company's lawyer keeps asking for new hearing dates to drag out my case. Does the National Commission have the power to set standard rules on how much the consumer courts can fine them for these constant adjournments?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "103"}]
+  },
+  {
+    "question": "The consumer court suggested I resolve my builder dispute through a mediator, but I want to know who they are. Which authority legally sets the rules for what qualifications these mediators must have, how much they get paid, and their code of conduct?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "103"}]
+  },
+  {
+    "question": "The medical shop near my house charged me ₹150 for a syrup when the MRP printed on the box clearly said ₹120. Can I officially file a consumer case against them just for overcharging me?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "2(6)"}]
+  },
+  {
+    "question": "A local hardware store is selling cheap, imported water heaters that don't meet any government safety standards and actually give people electric shocks. Can a formal complaint be filed against the shop owner for putting the public at risk, even if nobody has died yet?",
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "2(6)"}]
+  },
+  {
+    "question": "I gave my laptop to a college student I hired just for the weekend to help out at my shop, and someone snatched it from him while he was watching the counter. Under the law, was the laptop legally stolen from my possession, or does it count as being stolen from the student since I wasn't there?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "3"}]
+  },
+  {
+    "question": "Three guys robbed my neighbor. One actually went inside and took the jewelry, while the other two just stood outside acting as lookouts. Can the two guys who never even stepped foot in the house be punished for the actual robbery, or only the guy who went inside?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "3"}]
+  },
+  {
+    "question": "My brother was given a fine of ₹10,000 and sentenced to 4 months in jail because he couldn't afford to pay it. If our family manages to raise ₹5,000 and pays it after he has already spent two months in jail, will the court release him immediately, or does he have to finish the full four months?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "8"}]
+  },
+  {
+    "question": "My uncle passed away last month. Four years ago, a criminal court ordered him to pay a heavy fine, which he kept avoiding. Now that he is dead, is the fine officially cancelled, or can the government still come after the house and property he left behind to collect the money?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "8"}]
+  },
+  {
+    "question": "My 10-year-old son had a life-threatening tumor. The surgeon warned me that the operation was extremely risky and could likely result in death, but I signed the consent forms because it was his only chance at a cure. Tragically, he passed away during the surgery. Can the doctor be arrested and charged for causing my son's death?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "27"}]
+  },
+  {
+    "question": "I am the legal guardian of my adult brother who is of severely unsound mind. Last week, he suddenly tried to jump out of a moving train. I tackled him hard to the floor to stop him, and in the process, I ended up fracturing his arm. Even though I knowingly used enough physical force to break his bone, can I be sent to jail for causing him 'grievous hurt'?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "27"}]
+  },
+  {
+    "question": "I offered a guy ₹50,000 to burn down my competitor's shop. He took the money but got scared and went straight to the police instead of starting the fire. Since the building didn't burn and the crime never actually happened, can I still be charged with anything?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "46"}]
+  },
+  {
+    "question": "My manager asked me to take a laptop from our office and drop it off at his house. I did it, completely believing it belonged to him, but it turns out he was stealing company property. Since I didn't have any criminal intention and committed no crime, can my manager still be punished for the theft if he never actually touched the laptop himself?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "46"}]
+  },
+  {
+    "question": "A cyber-police officer found out a local gang was planning to rob a bank. To help them out, he used a special software to encrypt and delete the tip from the police database. However, the gang got scared and cancelled the robbery at the last minute. Since the robbery never actually happened, does the officer get off scot-free, or can he still go to jail just for hiding the plan?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "59"}]
+  },
+  {
+    "question": "A prison guard overheard two inmates plotting to murder another prisoner. Because he hated the target, the guard deliberately kept quiet, didn't warn his superiors, and the murder was successfully carried out. Since murder is a crime punishable by death or life in prison, what is the maximum jail sentence the guard can get specifically for hiding the plan?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "59"}]
+  },
+  {
+    "question": "My husband disappeared 8 years ago and the police never found him, so I assumed he was dead. I want to remarry now, but I want a totally fresh start so I'm not going to tell my new fiancé about my past marriage. Can I be prosecuted for bigamy if my first husband randomly shows up alive?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "82"}]
+  },
+  {
+    "question": "I just discovered that the man I married two years ago actually had a wife and kids in another state, and he completely hid his first marriage from me and my family. Since he lied to me to get married, what is the maximum prison sentence he can get?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "82"}]
+  },
+  {
+    "question": "A family court officially declared my first marriage void last month. My ex is still alive and well, but I want to marry someone else next week. Can my ex file a police complaint against me for remarrying while they are still alive?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "82"}]
+  },
+  {
+    "question": "During an argument, a man punched his neighbor in the stomach. He had no idea his neighbor recently had surgery and had a severely enlarged spleen. The punch caused internal bleeding and the neighbor died. Since a normal person wouldn't die from that punch, is the man guilty of intentional murder?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "101"}]
+  },
+  {
+    "question": "A guy found his business partner stealing from him and lost his temper. In a sudden blind rage, he pulled out a gun and shot at his partner, but missed and accidentally killed a random person walking by. Does the law treat the accidental killing of the bystander as cold-blooded murder?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "101"}]
+  },
+  {
+    "question": "Two drivers got into a minor car crash and immediately started a spontaneous, angry fistfight on the side of the road. In the heat of the moment, one driver hit the other too hard and accidentally killed him. Neither had weapons or took unfair advantage. Will this be tried as a premeditated murder?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "101"}]
+  },
+  {
+    "question": "A 25-year-old professional stuntman fully consented and signed waivers to perform a highly dangerous motorcycle jump knowing it could be fatal. The stunt went wrong and he died. Can the event organizer who instigated the jump be charged with murder?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "101"}]
+  },
+  {
+    "question": "My crazy ex locked me in a remote cabin and refused to let me leave for almost two weeks (12 days) before I finally escaped. Is the punishment for this worse than if they had only locked me in a room for a few hours?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "127"}]
+  },
+  {
+    "question": "A gang kidnapped my brother and deliberately hid him in an underground basement so that neither our family nor the police could find out where he was. Do they face extra jail time specifically for keeping his location a secret?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "127"}]
+  },
+  {
+    "question": "A store manager suspected an employee of stealing cash, so he locked the employee in a back storage room and refused to let him out until he signed a written confession and paid the money back. Is the manager legally allowed to do this?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "127"}]
+  },
+  {
+    "question": "A recruiter promised my neighbor a high-paying restaurant job in the city, but when she arrived, he took her passport and forced her to work in a sweatshop. The recruiter's lawyer claims it wasn't trafficking because she voluntarily packed her bags and agreed to go with him. Does her initial agreement change the crime?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "143"}]
+  },
+  {
+    "question": "A local police inspector was caught taking money to help a gang transport smuggled bonded laborers across the state border. Since he is an officer of the law who was supposed to stop this, does he face a harsher punishment than a regular citizen?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "143"}]
+  },
+  {
+    "question": "Police just busted a ring that kidnapped three different middle-school children from a railway station to force them into begging on the streets. Because they took multiple underage kids at once, what is the absolute minimum amount of time they will spend in prison?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "143"}]
+  },
+  {
+    "question": "I noticed a local vendor scraping the edges off thick coins to collect the metal before handing them back as change. He claims he isn't 'printing fake money' so the police can't arrest him for counterfeiting. Is it legally considered counterfeiting just to reduce the weight of a real coin?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "178"}]
+  },
+  {
+    "question": "A broker sold me a government revenue stamp for a property agreement, but I later realized he just took a cheap ₹10 stamp and cleverly altered the ink to make it look exactly like a ₹100 stamp. Since it's technically a genuine government stamp underneath the ink, does he still face the severe penalty for counterfeiting?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "178"}]
+  },
+  {
+    "question": "A gang was busted in my city for secretly printing thousands of fake US Dollars and Euros. Since they were completely ignoring Indian Rupees and only printing foreign money, does the Indian law on counterfeiting still apply to them, and can they still get a life sentence?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "178"}]
+  },
+  {
+    "question": "Someone in our neighborhood WhatsApp group keeps forwarding fake videos and voice notes trying to incite locals to attack people who recently migrated here from another state. Can the police arrest him just for sending messages on his phone, even if no fight has actually happened yet?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "196"}]
+  },
+  {
+    "question": "A fringe group is holding weapons training in a secluded field, and their leaders are openly telling the participants that they are preparing to use violence against a specific religious community. Since they haven't actually hurt anyone yet, is simply organizing this training a crime?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "196"}]
+  },
+  {
+    "question": "If an extremist leader gives a highly inflammatory hate speech deliberately trying to start a riot between two castes, does the law give him a harsher punishment if he delivered that speech inside a crowded temple or church instead of out in a public park?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "196"}]
+  },
+  {
+    "question": "My husband broke out of prison where he was serving time for robbery, and I let him hide in my apartment for a week so the police wouldn't find him. Since I knew he was an escaped convict, can the police charge me with a crime for hiding him?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "253"}]
+  },
+  {
+    "question": "A friend of mine fled to India after committing a massive financial fraud in Singapore, and there is a lawful extradition order for his arrest. If I hide him in my basement so the police can't find him, can I be punished under Indian law even though his actual crime happened in another country?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "253"}]
+  },
+  {
+    "question": "Some local goons trapped my brother in an alley, threatened to break both of his legs, and forced him to sign a completely blank piece of paper. Can they be charged with extortion for a blank paper, and how much jail time are they looking at for threatening to break his legs?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "308"}]
+  },
+  {
+    "question": "My corrupt business partner is threatening to go to the police and falsely frame me for the murder of a local politician unless I legally sign my half of the business over to him. I haven't signed anything yet. Can he be heavily punished just for making this threat to get my property?",
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "308"}]
+  }
+
+]
