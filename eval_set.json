@@ -225,7 +225,7 @@
   },
   {
     "question": "My corrupt business partner is threatening to go to the police and falsely frame me for the murder of a local politician unless I legally sign my half of the business over to him. I haven't signed anything yet. Can he be heavily punished just for making this threat to get my property?",
-    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "308"}]
+    "expected": [{"act": "Bharatiya Nyaya Sanhita, 2023", "section": "351"}]
   }
 
 ]
