@@ -132,7 +132,7 @@ html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; color: #2
     padding: 1.5rem; border-bottom: 3px solid #C98A2B;
     display: flex; align-items: center; gap: 1rem;
 }
-.masthead img { height: 48px; width: 48px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
+.masthead img { height: 96px; width: 96px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
 .masthead .masthead-emoji-fallback { font-size: 2.2rem; line-height: 1; }
 .masthead h1 { font-family: 'IBM Plex Serif', serif; color: #FBF9F4; font-size: 1.85rem;
                font-weight: 600; margin: 0; letter-spacing: 0.01em; }
