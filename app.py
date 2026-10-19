@@ -64,7 +64,7 @@ except ValueError:
 # config.py. The bot works fully without it.
 LOGGING_ENABLED = bool(getattr(config, "LOG_INTERACTIONS", False))
 
-st.set_page_config(page_title="Nyaya Sahayak: Indian Law Bot", page_icon="⚖️", layout="centered")
+st.set_page_config(page_title="Act Wise: Your Legal Assistant", page_icon="⚖️", layout="centered")
 
 ASSETS_DIR = "assets"
 LOGO_PATH = os.path.join(ASSETS_DIR, "logo.png")
@@ -222,7 +222,7 @@ if "all_sections" not in st.session_state:
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
-if st.sidebar.button("🗂️ New Case", use_container_width=True):
+if st.sidebar.button("🗂️ New Query", use_container_width=True):
     st.session_state.messages = []
     st.session_state.all_sections = []
     st.session_state.session_id = uuid.uuid4().hex[:12]
