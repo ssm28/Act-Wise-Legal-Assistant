@@ -13,6 +13,7 @@ delete_empty_db.py
 old_codes/
 legacy_law_map.json
 chromadb_graph.py
+calibrate_threshold.py
 # The vector database SHOULD be committed (not ignored) — your cloud
 # deployment needs this actual data to answer questions. Do not add
 # chroma_db/ to this file.

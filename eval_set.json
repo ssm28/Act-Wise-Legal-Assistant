@@ -1,7 +1,7 @@
 [
   {
     "question": "If a company is engaging in unfair trade practices that harm consumers as a class, which central authority has the power to regulate this under the Act?",
-    "expected": [{"act": "Consumer Protection Act, 2019", "section": "10"}]
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "18"}]
   },
   {
     "question": "Who makes up the Central Consumer Protection Authority, and where is its headquarters mandated to be located?",
@@ -9,7 +9,7 @@
   },
   {
     "question": "Which regulatory body is established by the Central Government to handle false or misleading advertisements and unfair trade practices?",
-    "expected": [{"act": "Consumer Protection Act, 2019", "section": "10"}]
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "18"}]
   },
   {
     "question": "What is the maximum time limit for the District Commission to decide a consumer complaint, and does it change if the product needs to be sent to a laboratory for testing?",
@@ -17,7 +17,7 @@
   },
   {
     "question": "I filed a case because my new smart TV keeps short-circuiting, but the company claims I broke it. If the court decides an independent lab needs to test the TV to find the defect, who has to pay the lab fees upfront?",
-    "expected": [{"act": "Consumer Protection Act, 2019", "section": "38"}]
+    "expected": [{"act": "Consumer Protection Act, 2019", "section": "39"}]
   },
   {
     "question": "Does the District Commission have the legal power to summon a witness or force a company to produce internal documents during a proceeding?",
