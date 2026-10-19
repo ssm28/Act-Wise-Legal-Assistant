@@ -129,13 +129,13 @@ html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; color: #2
 
 .masthead {
     background-color: #14213D; margin: 0 -1rem 1.5rem -1rem;
-    padding: 1.5rem; border-bottom: 3px solid #C98A2B;
-    display: flex; align-items: center; gap: 1rem;
-}
-.masthead img { height: 96px; width: 96px; object-fit: contain; border-radius: 8px; flex-shrink: 0; }
-.masthead .masthead-emoji-fallback { font-size: 2.2rem; line-height: 1; }
-.masthead h1 { font-family: 'IBM Plex Serif', serif; color: #FBF9F4; font-size: 1.85rem;
-               font-weight: 600; margin: 0; letter-spacing: 0.01em; }
+    padding: 1.5rem; border-bottom: 3px solid #C98A2B; display: flex; 
+    align-items: center; /* Ensures everything in the header is centered vertically */
+    gap: 1rem;}
+
+.masthead img { height: 96px; width: 96px; object-fit: contain; border-radius: 8px; flex-shrink: 0; margin: auto 0; /* Forces vertical centering if flex alignment behaves unexpectedly */}
+.masthead .masthead-emoji-fallback { font-size: 2.2rem; line-height: 1; margin: auto 0;}
+.masthead h1 { font-family: 'IBM Plex Serif', serif; color: #FBF9F4; font-size: 1.85rem;font-weight: 600; margin: 0; letter-spacing: 0.01em; }
 .masthead p { color: #C9CEDA; margin: 0.3rem 0 0 0; font-size: 0.92rem; }
 
 [data-testid="stChatMessage"] {
