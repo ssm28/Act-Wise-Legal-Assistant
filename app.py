@@ -56,11 +56,11 @@ from ask_law_bot import (
 
 try:
     RELEVANCE_MAX_DISTANCE = guardrails.parse_distance_setting(
-        getattr(config, "RELEVANCE_MAX_DISTANCE", 1.5)
+        getattr(config, "RELEVANCE_MAX_DISTANCE", 1.51)
     )
     THRESHOLD_SETTING_INVALID = False
 except ValueError:
-    RELEVANCE_MAX_DISTANCE = 1.5  # safe fallback; a warning shows in the sidebar
+    RELEVANCE_MAX_DISTANCE = 1.51  # safe fallback; a warning shows in the sidebar
     THRESHOLD_SETTING_INVALID = True
 
 LOGGING_ENABLED = bool(getattr(config, "LOG_INTERACTIONS", False))
@@ -165,9 +165,9 @@ html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; color: #2
 
 /* ---- Welcome screen ---- */
 .welcome { text-align: center; padding: 2rem 0.5rem 1rem 0.5rem; }
-.welcome h2 { font-family: 'IBM Plex Serif', serif; color: #14213D; font-size: 1.7rem;
+.welcome h2 { font-family: 'IBM Plex Serif', serif; color: #ffffff; font-size: 1.7rem;
               font-weight: 600; margin: 0 0 0.5rem 0; }
-.welcome p { color: #5B6475; max-width: 34rem; margin: 0 auto 1.25rem auto; line-height: 1.55; }
+.welcome p { color: #f0f2f5; max-width: 34rem; margin: 0 auto 1.25rem auto; line-height: 1.55; }
 
 /* ---- Chat messages: user on the right, bot on the left ---- */
 [data-testid="stChatMessage"] {
