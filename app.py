@@ -75,10 +75,11 @@ EXAMPLE_QUESTIONS = [
     "A company is running a misleading advertisement.",
 ]
 
-st.set_page_config(page_title="Act Wise: Your Legal Assistant", page_icon=get_base64_image(os.path.join(ASSETS_DIR, "logo.png")), layout="centered")
-
 ASSETS_DIR = "assets"
 LOGO_PATH = os.path.join(ASSETS_DIR, "logo.png")
+
+st.set_page_config(page_title="Act Wise: Your Legal Assistant", page_icon=LOGO_PATH if os.path.exists(LOGO_PATH) else "⚖️", layout="centered")
+
 BOT_AVATAR_PATH = os.path.join(ASSETS_DIR, "bot_avatar.png")
 BOT_AVATAR = BOT_AVATAR_PATH if os.path.exists(BOT_AVATAR_PATH) else "⚖️"
 
