@@ -1,18 +1,20 @@
 """
-Indian Law Bot: Streamlit UI (chat-based, multi-turn)
-------------------------------------------------------
+Indian Law Bot: Streamlit UI (chat-based, multi-turn, streaming)
+-----------------------------------------------------------------
 Run it:
-    streamlit run app.py
+    streamlit run app.py        (needs a recent Streamlit: pip install -U streamlit)
 
 Per-question flow:
     emergency check -> old-law lookup -> retrieval -> relevance gate ->
-    LLM answer -> citation check -> log to SQLite -> show answer + feedback
+    LLM answer (streamed word by word) -> citation check -> show extras
 
-Optional config.py setting:
-    RELEVANCE_MAX_DISTANCE  default 1.5 (see calibrate_threshold.py);
-                            set to None to switch the gate off.
+Optional config.py settings (all have defaults):
+    RELEVANCE_MAX_DISTANCE     default 1.5  (see calibrate_threshold.py)
+    LOG_INTERACTIONS           default False (store Q&A in a local SQLite file)
+    STREAM_SMOOTHING_SECONDS   default 0.01 (pause between words; 0 = show
+                               text exactly as it arrives)
 
-Optional images (fallback emoji used if missing):
+Optional images (an emoji is used if missing):
     assets/logo.png, assets/bot_avatar.png
 """
 
@@ -46,9 +48,10 @@ from ask_law_bot import (
     CHROMA_DB_PATH,
     COLLECTION_NAME,
     retrieve_sections,
+    lookup_sections,
     build_context_block,
     build_user_turn,
-    ask_llm,
+    ask_llm_stream,
 )
 
 try:
@@ -60,9 +63,17 @@ except ValueError:
     RELEVANCE_MAX_DISTANCE = 1.5  # safe fallback; a warning shows in the sidebar
     THRESHOLD_SETTING_INVALID = True
 
-# Storing conversations is OFF unless you set LOG_INTERACTIONS = True in
-# config.py. The bot works fully without it.
 LOGGING_ENABLED = bool(getattr(config, "LOG_INTERACTIONS", False))
+STREAM_DELAY = float(getattr(config, "STREAM_SMOOTHING_SECONDS", 0.01))
+
+# Shown as clickable suggestions on the empty chat screen. Edit these so
+# they match the Acts you have loaded.
+EXAMPLE_QUESTIONS = [
+    "A shop refuses to refund a defective phone. What should I do?",
+    "I received a fake product from an online store.",
+    "What is the time limit to file a consumer complaint?",
+    "A company is running a misleading advertisement.",
+]
 
 st.set_page_config(page_title="Act Wise: Your Legal Assistant", page_icon="⚖️", layout="centered")
 
@@ -117,30 +128,51 @@ def save_feedback(interaction_id, widget_key):
             pass
 
 
+def smooth(chunks, delay):
+    """Providers often send text in bursts of several words. Splitting each
+    burst into words with a tiny pause makes the text appear steadily."""
+    for chunk in chunks:
+        if delay <= 0:
+            yield chunk
+            continue
+        for piece in re.findall(r"\S+\s*|\s+", chunk):
+            yield piece
+            time.sleep(delay)
+
+
 # ---------------------------------------------------------------------------
-# Visual design (responsive)
+# Visual design
 # ---------------------------------------------------------------------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500&display=swap');
 
 html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; color: #232B3A; }
-.block-container { padding-top: 0 !important; max-width: 760px; }
+.block-container { padding-top: 0 !important; max-width: 780px; }
 
+/* ---- Masthead: bigger logo and title ---- */
 .masthead {
     background-color: #14213D; margin: 0 -1rem 1.5rem -1rem;
-    padding: 1.5rem; border-bottom: 3px solid #C98A2B; display: flex; 
-    align-items: center; /* Ensures everything in the header is centered vertically */
-    gap: 1rem;}
+    padding: 1.6rem 1.75rem; border-bottom: 4px solid #C98A2B;
+    display: flex; align-items: center; gap: 1.25rem;
+}
+.masthead img { height: 80px; width: auto; max-width: 160px; object-fit: contain;
+                border-radius: 10px; flex-shrink: 0; }
+.masthead .masthead-emoji-fallback { font-size: 3.4rem; line-height: 1; }
+.masthead h1 { font-family: 'IBM Plex Serif', serif; color: #FBF9F4; font-size: 2.2rem;
+               font-weight: 600; margin: 0; letter-spacing: 0.01em; line-height: 1.15; }
+.masthead p { color: #C9CEDA; margin: 0.4rem 0 0 0; font-size: 0.95rem; line-height: 1.4; }
 
-.masthead img { height: 48px; width: 48px; object-fit: contain; border-radius: 8px; flex-shrink: 0; margin: auto 0; /* Forces vertical centering if flex alignment behaves unexpectedly */}
-.masthead .masthead-emoji-fallback { font-size: 2.2rem; line-height: 1; margin: auto 0;}
-.masthead h1 { font-family: 'IBM Plex Serif', serif; color: #FBF9F4; font-size: 1.85rem; font-weight: 600; margin: 0; letter-spacing: 0.01em; }
-.masthead p { color: #C9CEDA; margin: 0.3rem 0 0 0; font-size: 0.92rem; }
+/* ---- Welcome screen ---- */
+.welcome { text-align: center; padding: 2rem 0.5rem 1rem 0.5rem; }
+.welcome h2 { font-family: 'IBM Plex Serif', serif; color: #14213D; font-size: 1.7rem;
+              font-weight: 600; margin: 0 0 0.5rem 0; }
+.welcome p { color: #5B6475; max-width: 34rem; margin: 0 auto 1.25rem auto; line-height: 1.55; }
 
+/* ---- Chat messages: user on the right, bot on the left ---- */
 [data-testid="stChatMessage"] {
     background-color: transparent !important; border-radius: 0 !important;
-    box-shadow: none !important; padding: 0.75rem 0 !important; margin-bottom: 0.25rem;
+    box-shadow: none !important; padding: 0.85rem 0 !important; margin-bottom: 0.25rem;
 }
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) {
     border-left: 3px solid #14213D; padding-left: 1rem !important;
@@ -152,24 +184,45 @@ html, body, [class*="css"] { font-family: 'IBM Plex Sans', sans-serif; color: #2
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
     text-align: right;
 }
+/* Slightly larger bot avatar */
+[data-testid="stChatMessageAvatarAssistant"] { width: 2.6rem !important; height: 2.6rem !important; }
+[data-testid="stChatMessageAvatarAssistant"] img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
-.stButton > button, [data-testid="stChatInputSubmitButton"] {
-    background-color: #C98A2B; color: #FBF9F4; border: none;
+/* ---- Buttons: outlined by default, saffron for the primary action ---- */
+.stButton > button {
+    background-color: #FFFFFF !important; color: #14213D !important;
+    border: 1.5px solid #14213D !important; border-radius: 8px !important; font-weight: 500;
 }
-.stButton > button:hover, [data-testid="stChatInputSubmitButton"]:hover { background-color: #B37A24; }
+.stButton > button:hover {
+    border-color: #C98A2B !important; color: #8A5A12 !important; background-color: #FFF8EC !important;
+}
+.stButton > button[kind="primary"], .stButton > button[data-testid="stBaseButton-primary"] {
+    background-color: #C98A2B !important; color: #FFFFFF !important; border-color: #C98A2B !important;
+}
+.stButton > button[kind="primary"]:hover, .stButton > button[data-testid="stBaseButton-primary"]:hover {
+    background-color: #B37A24 !important; color: #FFFFFF !important;
+}
 
+/* ---- Chat input ---- */
+[data-testid="stChatInput"] { border-radius: 14px; border: 1.5px solid #D9D4C7; }
+[data-testid="stChatInput"]:focus-within { border-color: #C98A2B; }
+[data-testid="stChatInputSubmitButton"] { background-color: #C98A2B; color: #FFFFFF; }
+
+/* ---- Sidebar ---- */
 [data-testid="stSidebar"] { background-color: #FBF9F4; border-right: 1px solid #E4DFD3; }
 .sidebar-acts-heading { font-family: 'IBM Plex Serif', serif; font-size: 0.95rem; color: #14213D;
     margin-top: 1.5rem; margin-bottom: 0.5rem; border-top: 1px solid #E4DFD3; padding-top: 1rem; }
 
-/* Phones and small tablets */
+/* ---- Phones and small tablets ---- */
 @media (max-width: 640px) {
     .block-container { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
-    .masthead { margin: 0 -0.75rem 1rem -0.75rem; padding: 1rem; gap: 0.75rem; }
-    .masthead img { height: 36px; width: 36px; }
-    .masthead .masthead-emoji-fallback { font-size: 1.8rem; }
-    .masthead h1 { font-size: 1.3rem; }
+    .masthead { margin: 0 -0.75rem 1rem -0.75rem; padding: 1rem; gap: 0.8rem; }
+    .masthead img { height: 52px; max-width: 100px; }
+    .masthead .masthead-emoji-fallback { font-size: 2.2rem; }
+    .masthead h1 { font-size: 1.4rem; }
     .masthead p { font-size: 0.78rem; }
+    .welcome { padding-top: 1rem; }
+    .welcome h2 { font-size: 1.35rem; }
     [data-testid="stChatMessage"] { padding: 0.5rem 0 !important; }
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarAssistant"]) { padding-left: 0.6rem !important; }
     [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) { padding-right: 0.6rem !important; }
@@ -201,8 +254,8 @@ st.markdown(f"""
     {logo_html}
     <div>
         <h1>Act Wise</h1>
-        <p>Ask in plain language. Answers are grounded in Indian statutes, with citations.</p>
-        <p><strong>This is legal information, not legal advice.</strong></p>
+                <p>Ask in plain language. Answers are grounded in Indian statutes, with citations.</p>
+                <p><strong>This is legal information, not legal advice.</strong></p>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -222,7 +275,7 @@ if "all_sections" not in st.session_state:
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
-if st.sidebar.button("🗂️ New Query", use_container_width=True):
+if st.sidebar.button("🗂️ New Case", use_container_width=True, type="primary"):
     st.session_state.messages = []
     st.session_state.all_sections = []
     st.session_state.session_id = uuid.uuid4().hex[:12]
@@ -255,14 +308,15 @@ if THRESHOLD_SETTING_INVALID:
 
 
 # ---------------------------------------------------------------------------
-# Rendering one assistant reply (used for history AND the live turn)
+# Rendering pieces of an assistant reply. Split in three so that, for a live
+# answer, the banners appear BEFORE the streamed text and the extras AFTER it.
 # ---------------------------------------------------------------------------
-def render_assistant(msg):
+def render_banners(msg):
     for flag in msg.get("emergency", []):
         st.error(guardrails.format_emergency_banner(flag), icon="🚨")
 
-    st.markdown(msg["content"])
 
+def render_extras(msg):
     if msg.get("unverified"):
         st.warning(
             "Couldn't verify these cited section numbers in the retrieved law text: "
@@ -277,7 +331,9 @@ def render_assistant(msg):
     if msg.get("sections"):
         best = msg.get("best_distance")
         label = f"{len(msg['sections'])} sections used to answer this"
-        if best is not None:
+        if msg.get("direct_lookup"):
+            label = f"{len(msg['sections'])} section(s) looked up directly by number"
+        elif best is not None:
             label += f" (best match distance {best:.2f})"
         with st.expander(label):
             for s in msg["sections"]:
@@ -289,6 +345,12 @@ def render_assistant(msg):
         key = f"fb_{msg['interaction_id']}"
         st.feedback("thumbs", key=key, on_change=save_feedback,
                     args=(msg["interaction_id"], key))
+
+
+def render_assistant(msg):
+    render_banners(msg)
+    st.markdown(msg["content"])
+    render_extras(msg)
 
 
 # ---------------------------------------------------------------------------
@@ -311,6 +373,25 @@ if st.session_state.view.startswith("read_act::"):
             st.write(s["text"])
 
 else:
+    # Read the input first, so the welcome screen can disappear the moment
+    # a question (typed or clicked) is submitted.
+    typed = st.chat_input("e.g. What can I do if a shopkeeper refuses to refund a defective product?")
+    question = typed or st.session_state.pop("pending_question", None)
+
+    if not st.session_state.messages and not question:
+        st.markdown("""
+        <div class="welcome">
+            <h2>How can I help you today?</h2>
+            <p>Describe your situation in plain words. You'll get a step-by-step plan:
+            what to do, what to avoid, and which law applies.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        cols = st.columns(2)
+        for i, example in enumerate(EXAMPLE_QUESTIONS):
+            if cols[i % 2].button(example, key=f"example_{i}", use_container_width=True):
+                st.session_state.pending_question = example
+                st.rerun()
+
     for msg in st.session_state.messages:
         if msg["role"] == "assistant":
             with st.chat_message("assistant", avatar=BOT_AVATAR):
@@ -318,8 +399,6 @@ else:
         else:
             with st.chat_message("user"):
                 st.markdown(msg["content"])
-
-    question = st.chat_input("e.g. What can I do if a shopkeeper refuses to refund a defective product?")
 
     if question:
         is_first_turn = len(st.session_state.messages) == 0
@@ -331,22 +410,53 @@ else:
             with st.spinner("Searching relevant law sections..."):
                 emergency = guardrails.detect_emergency(question)
                 legacy = guardrails.find_legacy_references(question)
-                hint = guardrails.legacy_query_hint(legacy)
-                sections = retrieve_sections(
-                    f"{question} {hint}".strip(), model=model, collection=collection
+
+                # Step 1: exact section lookup. "What does section 63 of BNS
+                # say?" is fetched by Act + number; vector search is bad at
+                # numbers. Also fetch the NEW section for any old IPC/CrPC one.
+                extra_aliases = getattr(config, "ACT_ALIASES", None)
+                pairs = guardrails.find_direct_section_refs(
+                    question, available_acts, extra_aliases
                 )
-                best = guardrails.best_distance(sections)
-                # The gate applies only to the FIRST message: a follow-up like
-                # "what if they refuse?" is vague on its own and would be
-                # wrongly blocked. (Query rewriting would fix this properly.)
-                in_scope = (not is_first_turn) or guardrails.is_in_scope(
-                    sections, RELEVANCE_MAX_DISTANCE
+                for r in legacy:
+                    act = guardrails.resolve_act(r["new"], available_acts, extra_aliases)
+                    if act:
+                        pairs.append({"act": act, "number": r["section"], "explicit": True})
+                direct, missing = lookup_sections(collection, pairs) if pairs else ([], [])
+                missing_explicit = [p for p in missing if p["explicit"]]
+                not_found_message = (
+                    guardrails.section_not_found_message(missing_explicit)
+                    if (missing_explicit and not direct) else None
                 )
 
+                # Step 2: otherwise, semantic search.
+                if direct:
+                    sections, best, in_scope = direct, 0.0, True
+                else:
+                    hint = guardrails.legacy_query_hint(legacy)
+                    sections = retrieve_sections(
+                        f"{question} {hint}".strip(), model=model, collection=collection
+                    )
+                    best = guardrails.best_distance(sections)
+                    # The gate applies only to the FIRST message: a follow-up like
+                    # "what if they refuse?" is vague on its own and would be
+                    # wrongly blocked. (Query rewriting would fix this properly.)
+                    in_scope = (not is_first_turn) or guardrails.is_in_scope(
+                        sections, RELEVANCE_MAX_DISTANCE
+                    )
+
+            # Emergency banners go first, before any answer text.
+            render_banners({"emergency": emergency})
+
             unverified, latency_ms = [], 0
-            if not in_scope:
+            if not_found_message:
+                answer = not_found_message
+                shown_sections = []
+                st.markdown(answer)
+            elif not in_scope:
                 answer = guardrails.out_of_scope_message(available_acts)
                 shown_sections = []
+                st.markdown(answer)
             else:
                 shown_sections = sections
                 st.session_state.all_sections.extend(sections)
@@ -359,20 +469,40 @@ else:
                     "content": build_user_turn(
                         question,
                         build_context_block(sections),
-                        guardrails.legacy_context_note(legacy),
+                        guardrails.legacy_context_note(legacy)
+                        + guardrails.direct_lookup_note(direct, missing_explicit),
                     ),
                 })
-                with st.spinner("Thinking..."):
-                    started = time.time()
-                    try:
-                        answer = ask_llm(llm_messages)
-                        check = guardrails.verify_citations(
-                            answer, st.session_state.all_sections
-                        )
-                        unverified = check["unverified"]
-                    except Exception as e:
-                        answer = f"Something went wrong calling the LLM: {e}"
-                    latency_ms = int((time.time() - started) * 1000)
+
+                thinking = st.empty()
+                thinking.caption("Thinking…")
+                buffer = []
+
+                def captured():
+                    """Pass pieces through while keeping a copy, and clear the
+                    'Thinking…' note when the first piece arrives."""
+                    first = True
+                    for piece in ask_llm_stream(llm_messages):
+                        if first:
+                            thinking.empty()
+                            first = False
+                        buffer.append(piece)
+                        yield piece
+
+                started = time.time()
+                try:
+                    st.write_stream(smooth(captured(), STREAM_DELAY))
+                    answer = "".join(buffer)
+                    unverified = guardrails.verify_citations(
+                        answer, st.session_state.all_sections
+                    )["unverified"]
+                except Exception as e:
+                    thinking.empty()
+                    partial = "".join(buffer)
+                    note = f"*Something went wrong while writing the answer: {e}*"
+                    st.markdown(note)
+                    answer = (partial + "\n\n" if partial else "") + note
+                latency_ms = int((time.time() - started) * 1000)
 
             interaction_id = None
             if LOGGING_OK:
@@ -389,7 +519,8 @@ else:
                 "role": "assistant", "content": answer, "sections": shown_sections,
                 "best_distance": best, "emergency": emergency, "unverified": unverified,
                 "legacy": legacy, "interaction_id": interaction_id,
+                "direct_lookup": bool(direct),
             }
-            render_assistant(msg)
+            render_extras(msg)
 
         st.session_state.messages.append(msg)

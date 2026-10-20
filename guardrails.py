@@ -222,3 +222,137 @@ def verify_citations(answer: str, retrieved_sections: list) -> dict:
     cited = extract_cited_sections(answer)
     unverified = [c for c in cited if c.upper() not in retrieved]
     return {"cited": cited, "unverified": unverified}
+
+
+# ---------------------------------------------------------------------------
+# 5. Exact section lookup ("what does section 63 of BNS say?")
+# ---------------------------------------------------------------------------
+# Semantic search matches MEANING, so it is poor at exact references like
+# "section 63". When a question names a section, we fetch it directly by
+# Act + number instead (a metadata lookup, no vector search involved).
+_SECTION_WORD = r"(?:sections?|sec\.?|s\.)?"
+_LAW_WORDS = re.compile(
+    r"\b(act|code|sanhita|adhiniyam|constitution|rules|regulations)\b", re.IGNORECASE
+)
+_LOOSE_RE = re.compile(
+    r"\b(?:sections?|sec\.?|s\.)\s*"
+    r"(\d{1,3}[a-z]?(?:\(\w+\))*"
+    r"(?:\s*(?:,|and|&|or)\s*\d{1,3}[a-z]?(?:\(\w+\))*)*)",
+    re.IGNORECASE,
+)
+
+
+def _norm(text: str) -> str:
+    # "Samhita" and "Sanhita" are both used for the same word.
+    return text.lower().replace("samhita", "sanhita")
+
+
+def build_act_aliases(act_names, extra=None) -> dict:
+    """Map every short name people might type to the exact Act name.
+    'Bharatiya Nyaya Sanhita, 2023' -> 'bns', 'bharatiya nyaya sanhita';
+    'Consumer Protection Act, 2019' -> 'cpa', 'consumer protection act', ...
+    extra: optional {act name: [more aliases]}, e.g. from config.ACT_ALIASES."""
+    aliases = {}
+    for act in act_names:
+        base = re.sub(r",?\s*\d{4}\s*$", "", _norm(act)).strip()
+        words = re.findall(r"[a-z]+", base)
+        if not words:
+            continue
+        variants = [words]
+        if len(words) > 1 and words[-1] == "act":
+            variants.append(words[:-1])
+        candidates = set()
+        for v in variants:
+            candidates.add(" ".join(v))
+            candidates.add("".join(w[0] for w in v))
+        for alias in (extra or {}).get(act, []):
+            candidates.add(_norm(alias))
+        for c in candidates:
+            if len(c) >= 3 and c not in aliases:
+                aliases[c] = act
+    return aliases
+
+
+def resolve_act(name: str, act_names, extra=None):
+    """'BNS' -> the loaded Act it refers to, or None if it isn't loaded."""
+    return build_act_aliases(act_names, extra).get(_norm(name))
+
+
+def find_direct_section_refs(text: str, act_names, extra=None) -> list:
+    """Find explicit section references and pair each with an Act.
+
+    Returns a list of {"act", "number", "explicit"} dicts. 'explicit' is True
+    when the user named the Act (so a miss is worth reporting).
+    Deliberately returns NOTHING when the reference is risky:
+      - the text mentions IPC / CrPC / Evidence Act (handled by the old-law
+        table instead), or
+      - it names a law that is not loaded ("section 63 of the Companies Act"),
+    because a wrong confident match is worse than falling back to search."""
+    norm = _norm(text)
+    aliases = build_act_aliases(act_names, extra)
+    pairs, seen = [], set()
+
+    def add(act, number, explicit):
+        key = (act, number.upper())
+        if key not in seen:
+            seen.add(key)
+            pairs.append({"act": act, "number": number.upper(), "explicit": explicit})
+
+    named_acts, attached = [], set()
+    if aliases:
+        alt = "|".join(re.escape(a) for a in sorted(aliases, key=len, reverse=True))
+        # "BNS 63", "BNS section 63"
+        p_after = re.compile(
+            rf"\b({alt})\b\s*[,:\-]?\s*{_SECTION_WORD}\s*(\d{{1,3}}[a-z]?)\b")
+        # "section 63 of BNS", "63 of the BNS" (also catches "scetion 63 of BNS")
+        p_before = re.compile(
+            rf"{_SECTION_WORD}\s*(\d{{1,3}}[a-z]?)(?:\s*\(\w+\))*\s+of\s+(?:the\s+)?({alt})\b")
+        for m in p_after.finditer(norm):
+            add(aliases[m.group(1)], m.group(2), True)
+            attached.add(m.group(2).upper())
+        for m in p_before.finditer(norm):
+            add(aliases[m.group(2)], m.group(1), True)
+            attached.add(m.group(1).upper())
+        named_acts = list(dict.fromkeys(
+            aliases[a] for a in re.findall(rf"\b({alt})\b", norm)))
+
+    # Loose numbers: "section 63" with no Act attached.
+    loose = []
+    for m in _LOOSE_RE.finditer(norm):
+        for token in re.split(r"\s*(?:,|and|&|or)\s*", m.group(1)):
+            base = re.match(r"\d{1,3}[a-z]?", token.strip())
+            if base and base.group(0).upper() not in attached:
+                loose.append(base.group(0))
+
+    legacy_mentioned = any(re.search(p, norm, re.IGNORECASE) for p in _NAME_PATTERNS.values())
+    unknown_law = (not named_acts) and bool(_LAW_WORDS.search(norm))
+    if legacy_mentioned or unknown_law:
+        loose = []
+
+    targets = named_acts or list(act_names)
+    for n in loose:
+        for act in targets:
+            add(act, n, bool(named_acts))
+    return pairs
+
+
+def direct_lookup_note(found: list, missing_explicit: list) -> str:
+    """Tells the LLM which sections were fetched by number (and which were
+    not found), so it answers as a section explanation."""
+    lines = []
+    if found:
+        wanted = ", ".join(f"{s['act']} Section {s['section']}" for s in found)
+        lines.append(f"The user asked about specific sections, fetched directly by number: {wanted}")
+    if missing_explicit:
+        gone = ", ".join(f"{p['act']} Section {p['number']}" for p in missing_explicit)
+        lines.append(f"These requested sections were NOT found in the database: {gone}")
+    return ("Lookup notes:\n- " + "\n- ".join(lines) + "\n\n") if lines else ""
+
+
+def section_not_found_message(missing_explicit: list) -> str:
+    gone = ", ".join(f"Section {p['number']} of {p['act']}" for p in missing_explicit)
+    return (
+        f"I couldn't find **{gone}** in my database. Please check the section "
+        "number. You can browse the full text of each Act from the **Acts "
+        "loaded** list in the sidebar."
+    )
