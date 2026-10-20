@@ -36,8 +36,29 @@ EMERGENCY_RULES = [
         "key": "violence",
         "title": "If you are in immediate danger",
         "patterns": [r"beat(ing|s)? me", r"hit(ting|s)? me", r"kill me",
-                     r"threaten\w* to kill", r"attack(ed|ing)? me",
-                     r"locked me", r"kidnap\w*", r"abduct\w*"],
+                     r"threaten\w* to kill", r"attack(ed|ing)? me", r"locked me",
+                     r"kidnap\w*", r"abduct\w*",
+                     # --- Feeling Unsafe or In Danger ---
+                     r"in danger", r"(feel|feeling|am)\s+unsafe", r"not safe",
+                     r"my life is in danger",
+                     # --- Feeling Scared or Threatened ---
+                     r"(feel|feeling|am)\s+(scared|terrified|afraid|frightened)",
+                     r"(feel|feeling|am)\s+threatened", r"threaten(ing|ed)? me",
+                     # --- Stalking & Harassment ---
+                     r"stalk(ing|ed)? me", r"follow(ing|ed)? me",
+                     r"harass(ing|ed)? me", r"watching me",
+                     # --- Broad Physical Harm & Abuse ---
+                     r"hurt(ing|s)? me", r"abus(ing|ed|e) me",
+                     r"chok(ing|ed)? me", r"strangl(ing|ed)? me",
+                     # --- Trapped & Coerced ---
+                     r"trap(ped)? me", r"won'?t let me (leave|go)",
+                     r"held against my will", r"forc(ing|ed)? me",
+                     # --- Weapons ---
+                     r"has a (gun|knife|weapon)", r"pointed a (gun|knife|weapon)",
+                     r"pulled a (gun|knife|weapon)",
+                     # --- Emergency Signals ---
+                     r"call\s+(the\s+)?(police|cops|112|emergency)", r"need\s+(an\s+)?ambulance",
+                     r"need help immediately"],
         "helplines": [("Emergency (police / ambulance / fire)", "112")],
     },
     {
